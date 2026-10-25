@@ -2602,12 +2602,13 @@ EOF
 
 Unmount_NetworkMap_Label()
 {
-	local page
+	local page mountedPage
 
 	for page in $NETWORKMAP_PAGES
 	do
-		grep -qF "$NETWORKMAP_JS_NAME" "/www/$page" && umount "/www/$page" 2>/dev/null
-		rm -f "/tmp/${SCRIPT_NAME}_$(basename "$page")"
+		mountedPage="/tmp/${SCRIPT_NAME}_$(basename "$page")"
+		cmp -s "/www/$page" "$mountedPage" && umount "/www/$page" 2>/dev/null
+		rm -f "$mountedPage"
 	done
 	rm -f "$NETWORKMAP_JS_PATH"
 }
